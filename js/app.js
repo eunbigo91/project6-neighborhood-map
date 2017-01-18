@@ -75,24 +75,30 @@ var ViewModel = function() {
         self.placeList.push( new Place(placeItem) );
     });
 
-    this.markerMouseOver = function(marker) {
-        marker.addListener('mouseover', function() {
+    this.markerAnimation = function(marker) {
+        marker.addListener('click', function() {
             marker.setAnimation(google.maps.Animation.BOUNCE);
             setTimeout(function () {
                 marker.setAnimation(null);
             }, 1000);
+        });
+        marker.addListener('mouseover', function() {
+            marker.setIcon('http://maps.google.com/mapfiles/ms/icons/blue-dot.png');
+        });
+        marker.addListener('mouseout', function() {
+            marker.setIcon('http://maps.google.com/mapfiles/ms/icons/red-dot.png');
         });
     };
 
     var marker;
     self.placeList().forEach(function(placeItem) {
         marker = new google.maps.Marker({
+            icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
             map: map,
-            draggable: true,
             animation: google.maps.Animation.DROP,
             position: new google.maps.LatLng(placeItem.lat(), placeItem.lng())
         });
-        self.markerMouseOver(marker);
+        self.markerAnimation(marker);
     });
 
 
