@@ -5,11 +5,12 @@
     <meta name="viewport" content="initial-scale=1.0">
     <meta charset="utf-8">
     <link href="css/style.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Frank+Ruhl+Libre|Inconsolata" rel="stylesheet">
   </head>
   <body>
     <div class="container">
-        <div class=side-panel>
-            <h1> Seattle's Tour Spot </h1>
+        <div class="side-panel">
+            <h1> Seattle's Tourist Attractions </h1>
             <div>
               <ul data-bind="foreach: placeList">
                 <li id="placeName" data-bind="text: name, event: { mouseover: $parent.mouseOverMarker, mouseout: $parent.mouseOutMarker }, click: $parent.clickMarker"></li>
@@ -19,6 +20,7 @@
       <div id="map"></div>
     </div>
 
+    <script src=https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js></script>
     <script src="https://maps.googleapis.com/maps/api/js?callback=initMap"
         async defer onerror="googleMapsError()"></script>
     <script src="js/lib/knockout-3.4.1.js"></script>

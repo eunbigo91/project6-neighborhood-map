@@ -5,6 +5,11 @@ html, body, .container{
     padding: 0;
 }
 
+h1 {
+    font-family: 'Inconsolata', monospace;
+    margin-bottom: 0;
+}
+
 
 #map {
     height: 100%;
@@ -25,12 +30,13 @@ ul {
     margin: 0px;
     padding: 10px;
     list-style-type: none;
+    font-family: 'Frank Ruhl Libre', sans-serif;
 }
 
 li {
     display: block;
     color: #000;
-    margin-bottom: 5px;
+    margin: 0.5em 0;
     text-decoration: none;
 }
 
@@ -38,4 +44,8 @@ li {
 li:hover {
     background-color: #555;
     color: white;
+}
+
+a:visited {
+    color: blue;
 }

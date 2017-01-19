@@ -12,10 +12,10 @@ var favPlaces = [
         "lng" : "-122.340549"
         },
         {
-        "name" : "Experience Music Project Museum",
-        "location" : "325 5th Ave N, Seattle, WA 98109",
-        "lat" : "47.621707",
-        "lng" : "-122.348518"
+        "name" : "Seattle Underground",
+        "location" : "614 1st Ave, Seattle, WA 98104",
+        "lat" : "47.602365",
+        "lng" : "-122.333651"
         },
         {
         "name" : "Chihuly Garden and Glass",
@@ -55,6 +55,7 @@ googleMapsError = function() {
 
 // Initialize the map
 var map;
+var infoWindow;
 function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {
         center: {lat: 47.606209, lng: -122.332071},
@@ -73,16 +74,37 @@ var Place = function(data) {
 }
 
 var markerAnimation = function(marker) {
-    marker.addListener('click', function() {
-        marker.setIcon('http://maps.google.com/mapfiles/ms/icons/blue-dot.png');
-    });
     marker.addListener('mouseover', function() {
         marker.setAnimation(google.maps.Animation.BOUNCE);
     });
     marker.addListener('mouseout', function() {
         marker.setAnimation(null);
     });
-};
+}
+
+var attachInfo = function(marker, name, location) {
+    infoWindow = new google.maps.InfoWindow();
+    google.maps.event.addListener(marker, "click", function() {
+        var wikiUrl = 'http://en.wikipedia.org/w/api.php?action=opensearch&search=' + name + '&format=json&callback=wikiCallback';
+        $.ajax({
+            url: wikiUrl,
+            dataType:"jsonp",
+            //jsonp : "callback",
+        })
+        .done(function(response) {
+            var article = response[1];
+                var url = 'http://en.wikipedia.org/wiki/'+article;
+                infoWindow.setContent("<a href='"+url+"'>"+name + "</a><br>" + location);
+        })
+        .fail(function() {
+            infoWindow.setContent(name+"<br>"+location);
+        });
+    });
+    marker.addListener('click', function() {
+        marker.setIcon('http://maps.google.com/mapfiles/ms/icons/blue-dot.png');
+        infoWindow.open(marker.get('map'), marker);
+    });
+}
 
 var ViewModel = function() {
     var self = this;
@@ -93,6 +115,7 @@ var ViewModel = function() {
     });
 
     var marker;
+
     self.placeList().forEach(function(placeItem) {
         marker = new google.maps.Marker({
             icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
@@ -102,6 +125,7 @@ var ViewModel = function() {
         });
         placeItem.marker = marker;
         this.markerAnimation(marker);
+        this.attachInfo(marker, placeItem.name(), placeItem.location());
     });
 
     this.clickMarker = function(place) {
