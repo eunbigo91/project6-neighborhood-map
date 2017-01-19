@@ -65,6 +65,7 @@ var Place = function(data) {
     this.location = ko.observable(data.location);
     this.lat = ko.observable(data.lat);
     this.lng = ko.observable(data.lng);
+    this.marker = ko.observable();
 }
 
 var ViewModel = function() {
@@ -98,8 +99,17 @@ var ViewModel = function() {
             animation: google.maps.Animation.DROP,
             position: new google.maps.LatLng(placeItem.lat(), placeItem.lng())
         });
+        placeItem.marker = marker;
         self.markerAnimation(marker);
     });
 
-
+    this.clickMarker = function(place) {
+        google.maps.event.trigger(place.marker, "click");
+    };
+    this.mouseOverMarker = function(place) {
+        google.maps.event.trigger(place.marker, "mouseover");
+    };
+    this.mouseOutMarker = function(place) {
+        google.maps.event.trigger(place.marker, "mouseout");
+    };
 }
