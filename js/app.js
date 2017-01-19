@@ -49,6 +49,10 @@ var favPlaces = [
         }
 ]
 
+googleMapsError = function() {
+    document.getElementById('map').innerHTML = "<h2>Failed to load data from Google, try again later</h2>";
+}
+
 // Initialize the map
 var map;
 function initMap() {
