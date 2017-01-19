@@ -65,8 +65,20 @@ var Place = function(data) {
     this.location = ko.observable(data.location);
     this.lat = ko.observable(data.lat);
     this.lng = ko.observable(data.lng);
-    this.marker = ko.observable();
+    this.marker;
 }
+
+var markerAnimation = function(marker) {
+    marker.addListener('click', function() {
+        marker.setIcon('http://maps.google.com/mapfiles/ms/icons/blue-dot.png');
+    });
+    marker.addListener('mouseover', function() {
+        marker.setAnimation(google.maps.Animation.BOUNCE);
+    });
+    marker.addListener('mouseout', function() {
+        marker.setAnimation(null);
+    });
+};
 
 var ViewModel = function() {
     var self = this;
@@ -75,21 +87,6 @@ var ViewModel = function() {
     favPlaces.forEach(function(placeItem) {
         self.placeList.push( new Place(placeItem) );
     });
-
-    this.markerAnimation = function(marker) {
-        marker.addListener('click', function() {
-            marker.setAnimation(google.maps.Animation.BOUNCE);
-            setTimeout(function () {
-                marker.setAnimation(null);
-            }, 1000);
-        });
-        marker.addListener('mouseover', function() {
-            marker.setIcon('http://maps.google.com/mapfiles/ms/icons/blue-dot.png');
-        });
-        marker.addListener('mouseout', function() {
-            marker.setIcon('http://maps.google.com/mapfiles/ms/icons/red-dot.png');
-        });
-    };
 
     var marker;
     self.placeList().forEach(function(placeItem) {
@@ -100,7 +97,7 @@ var ViewModel = function() {
             position: new google.maps.LatLng(placeItem.lat(), placeItem.lng())
         });
         placeItem.marker = marker;
-        self.markerAnimation(marker);
+        this.markerAnimation(marker);
     });
 
     this.clickMarker = function(place) {
