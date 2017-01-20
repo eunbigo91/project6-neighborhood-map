@@ -53,11 +53,11 @@ var favPlaces = [
         "lat" : "47.621707",
         "lng" : "-122.348518"
         }
-]
+];
 
 // Google Maps API error
 function googleMapsError() {
-    alert('Failed to load data from Google. Try again later');
+    alert("Failed to load data from Google. Try again later");
 }
 
 var map;
@@ -79,8 +79,8 @@ var Place = function(data) {
     this.location = data.location;
     this.lat = data.lat;
     this.lng = data.lng;
-    this.marker;
-}
+    this.marker = '';
+};
 
 // Set animation when mouseover and mouseout
 var markerAnimation = function(marker) {
@@ -90,12 +90,13 @@ var markerAnimation = function(marker) {
     marker.addListener('mouseout', function() {
         marker.setAnimation(null);
     });
-}
+};
 
 // Make infoWindow with Wikipedia informations
 var attachInfo = function(marker, name, location) {
     marker.addListener('click', function() {
         marker.setIcon('http://maps.google.com/mapfiles/ms/icons/blue-dot.png');
+        map.setCenter(marker.getPosition());
         setTimeout(function () {
             marker.setIcon('http://maps.google.com/mapfiles/ms/icons/red-dot.png');
         }, 1000);
@@ -106,7 +107,7 @@ var attachInfo = function(marker, name, location) {
         })
         .done(function(response) {
             var url = response[3];
-            if (response[1].length == 0) {
+            if (response[1].length === 0) {
                 infoWindow.setContent(name+'<br><b>'+location + '</b><br> > Data is not available. (Wikipedia) ');
             }
             else {
@@ -121,7 +122,7 @@ var attachInfo = function(marker, name, location) {
 
         infoWindow.open(marker.get('map'), marker);
     });
-}
+};
 
 var ViewModel = function() {
     var self = this;
@@ -160,7 +161,8 @@ var ViewModel = function() {
     this.isVisible = ko.observable(false);
     this.clickMe = function(){
         this.isVisible(!this.isVisible());
-    }
+    };
+
     // Filter markers based on filter (user input)
     this.filter = ko.observable('');
     this.filtered = ko.computed(function() {
@@ -174,4 +176,4 @@ var ViewModel = function() {
             }
         });
     });
-}
+};

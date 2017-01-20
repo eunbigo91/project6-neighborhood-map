@@ -11,9 +11,10 @@
     <header>
       <h1> Seattle's Tourist Attractions </h1>
     </header>
-      <button data-bind="click: clickMe" class="btn">Click me!</button>
+      <button data-bind="click: clickMe" class="btn">List</button>
       <div data-bind="visible: isVisible">
         <aside>
+          <button data-bind="click: clickMe" class="btn2">X</button> <br>
           <input class="filter" placeholder="Filter Location" data-bind="textInput: filter, valueUpdate: 'keyup'">
           <ul data-bind="foreach: filtered">
             <li class="placeName" data-bind="text: name, event: { mouseover: $parent.mouseOverMarker, mouseout: $parent.mouseOutMarker }, click: $parent.clickMarker"></li>

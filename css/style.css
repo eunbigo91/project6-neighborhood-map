@@ -22,8 +22,13 @@ h1 {
 
 .btn {
     position: absolute;
-    top: 35px;
+    top: 20px;
     left: 10px;
+    visibility: visible;
+}
+
+.btn2 {
+    visibility: hidden;
 }
 
 aside {
@@ -67,7 +72,7 @@ a:visited {
 }
 
 .filter {
-    margin-top: 1.5em;
+    margin-top: 1em;
     width: 70%;
     height: 20px;
 }
@@ -76,5 +81,15 @@ a:visited {
 @media (max-width: 480px) {
     h1 {
         font-size: 20px;
+    }
+    .btn {
+        position: absolute;
+        top: 50%;
+        left: 20px;
+        z-index: 1;
+    }
+    .btn2 {
+        margin-top: 1em;
+        visibility: visible;
     }
 }
