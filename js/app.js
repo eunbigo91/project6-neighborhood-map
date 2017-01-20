@@ -49,13 +49,15 @@ var favPlaces = [
         }
 ]
 
+// Google Maps API error
 function googleMapsError() {
-    alert("Failed to load data from Google, try again later");
+    alert("Failed to load data from Google. Try again later");
 }
 
-// Initialize the map
 var map;
 var infoWindow;
+
+// Initialize the map
 function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {
         center: {lat: 47.606209, lng: -122.332071},
@@ -65,6 +67,7 @@ function initMap() {
     ko.applyBindings(new ViewModel());
 }
 
+// Place constructor
 var Place = function(data) {
     this.name = ko.observable(data.name);
     this.location = ko.observable(data.location);
@@ -73,6 +76,7 @@ var Place = function(data) {
     this.marker;
 }
 
+// Set animation when mouseover and mouseout
 var markerAnimation = function(marker) {
     marker.addListener('mouseover', function() {
         marker.setAnimation(google.maps.Animation.BOUNCE);
@@ -82,6 +86,7 @@ var markerAnimation = function(marker) {
     });
 }
 
+// Make infoWindow with Wikipedia informations
 var attachInfo = function(marker, name, location) {
     infoWindow = new google.maps.InfoWindow({maxWidth: 200});
     marker.addListener('click', function() {
@@ -94,8 +99,9 @@ var attachInfo = function(marker, name, location) {
         .done(function(response) {
             var url = response[3];
             var article = response[2][0];
-            infoWindow.setContent("<a href='"+url+"'>"+name + "</a><br><b>" + location + "</b><br> > " +article);
+            infoWindow.setContent("<a href='"+url+"'>"+name + "</a><br><b>" + location + "</b><br> > " +article + " (Wikipedia)");
         })
+        // Wikipedia API error
         .fail(function() {
             infoWindow.setContent(name+"<br><b>"+location + "</b><br> > Failed to load data from Wikipedia. Please try refreshing later. ");
         });
@@ -111,6 +117,7 @@ var ViewModel = function() {
         self.placeList.push( new Place(placeItem) );
     });
 
+    // Creates markers
     var marker;
     self.placeList().forEach(function(placeItem) {
         marker = new google.maps.Marker({
@@ -135,6 +142,7 @@ var ViewModel = function() {
         google.maps.event.trigger(place.marker, "mouseout");
     };
 
+    // Filter markers based on filter (user input)
     this.filter = ko.observable("");
     this.filtered = ko.computed(function() {
         return ko.utils.arrayFilter(self.placeList(), function(place) {
