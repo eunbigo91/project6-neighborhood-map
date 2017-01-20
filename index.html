@@ -4,19 +4,23 @@
     <title> Neighborhood Map </title>
     <meta name="viewport" content="initial-scale=1.0">
     <meta charset="utf-8">
-    <link href="css/style.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Frank+Ruhl+Libre|Inconsolata" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
   </head>
   <body>
     <header>
-    </header>
-    <aside>
       <h1> Seattle's Tourist Attractions </h1>
-      <input class="filter" placeholder="Filter Location" data-bind="textInput: filter, valueUpdate: 'keyup'">
-      <ul data-bind="foreach: filtered">
-        <li class="placeName" data-bind="text: name, event: { mouseover: $parent.mouseOverMarker, mouseout: $parent.mouseOutMarker }, click: $parent.clickMarker"></li>
-      </ul>
-    </aside>
+    </header>
+      <button data-bind="click: clickMe" class="btn">Click me!</button>
+      <div data-bind="visible: isVisible">
+        <aside>
+          <input class="filter" placeholder="Filter Location" data-bind="textInput: filter, valueUpdate: 'keyup'">
+          <ul data-bind="foreach: filtered">
+            <li class="placeName" data-bind="text: name, event: { mouseover: $parent.mouseOverMarker, mouseout: $parent.mouseOutMarker }, click: $parent.clickMarker"></li>
+          </ul>
+        </aside>
+      </div>
+
 
     <div id="map"></div>
 

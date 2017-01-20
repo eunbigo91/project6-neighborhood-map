@@ -156,6 +156,11 @@ var ViewModel = function() {
         google.maps.event.trigger(place.marker, 'mouseout');
     };
 
+    // A toggle menu
+    this.isVisible = ko.observable(false);
+    this.clickMe = function(){
+        this.isVisible(!this.isVisible());
+    }
     // Filter markers based on filter (user input)
     this.filter = ko.observable('');
     this.filtered = ko.computed(function() {
