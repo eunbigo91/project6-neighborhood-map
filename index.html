@@ -12,8 +12,9 @@
         <div class="side-panel">
             <h1> Seattle's Tourist Attractions </h1>
             <div>
-              <ul data-bind="foreach: placeList">
-                <li id="placeName" data-bind="text: name, event: { mouseover: $parent.mouseOverMarker, mouseout: $parent.mouseOutMarker }, click: $parent.clickMarker"></li>
+              <input class="filter" placeholder="Filter Location" data-bind="textInput: filter, valueUpdate: 'keyup'" />
+              <ul data-bind="foreach: filtered">
+                <li data-bind="text: name, event: { mouseover: $parent.mouseOverMarker, mouseout: $parent.mouseOutMarker }, click: $parent.clickMarker"></li>
               </ul>
             </div>
         </div>

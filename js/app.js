@@ -49,8 +49,8 @@ var favPlaces = [
         }
 ]
 
-googleMapsError = function() {
-    document.getElementById('map').innerHTML = "<h2>Failed to load data from Google, try again later</h2>";
+function googleMapsError() {
+    alert("Failed to load data from Google, try again later");
 }
 
 // Initialize the map
@@ -83,25 +83,22 @@ var markerAnimation = function(marker) {
 }
 
 var attachInfo = function(marker, name, location) {
-    infoWindow = new google.maps.InfoWindow();
-    google.maps.event.addListener(marker, "click", function() {
+    infoWindow = new google.maps.InfoWindow({maxWidth: 200});
+    marker.addListener('click', function() {
+        marker.setIcon('http://maps.google.com/mapfiles/ms/icons/blue-dot.png');
         var wikiUrl = 'http://en.wikipedia.org/w/api.php?action=opensearch&search=' + name + '&format=json&callback=wikiCallback';
         $.ajax({
             url: wikiUrl,
-            dataType:"jsonp",
-            //jsonp : "callback",
+            dataType:"jsonp"
         })
         .done(function(response) {
-            var article = response[1];
-                var url = 'http://en.wikipedia.org/wiki/'+article;
-                infoWindow.setContent("<a href='"+url+"'>"+name + "</a><br>" + location);
+            var url = response[3];
+            var article = response[2][0];
+            infoWindow.setContent("<a href='"+url+"'>"+name + "</a><br><b>" + location + "</b><br> > " +article);
         })
         .fail(function() {
-            infoWindow.setContent(name+"<br>"+location);
+            infoWindow.setContent(name+"<br><b>"+location + "</b><br> > Failed to load data from Wikipedia. Please try refreshing later. ");
         });
-    });
-    marker.addListener('click', function() {
-        marker.setIcon('http://maps.google.com/mapfiles/ms/icons/blue-dot.png');
         infoWindow.open(marker.get('map'), marker);
     });
 }
@@ -115,7 +112,6 @@ var ViewModel = function() {
     });
 
     var marker;
-
     self.placeList().forEach(function(placeItem) {
         marker = new google.maps.Marker({
             icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
@@ -128,6 +124,7 @@ var ViewModel = function() {
         this.attachInfo(marker, placeItem.name(), placeItem.location());
     });
 
+    // Make marker appropriate response when list is clicked
     this.clickMarker = function(place) {
         google.maps.event.trigger(place.marker, "click");
     };
@@ -137,4 +134,17 @@ var ViewModel = function() {
     this.mouseOutMarker = function(place) {
         google.maps.event.trigger(place.marker, "mouseout");
     };
+
+    this.filter = ko.observable("");
+    this.filtered = ko.computed(function() {
+        return ko.utils.arrayFilter(self.placeList(), function(place) {
+            if (place.name().toLowerCase().indexOf(self.filter().toLowerCase()) >= 0) {
+                place.marker.setVisible(true);
+                return true;
+            } else {
+                place.marker.setVisible(false);
+                return false;
+            }
+        });
+    });
 }
