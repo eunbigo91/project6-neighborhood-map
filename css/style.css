@@ -1,4 +1,5 @@
-html, body, .container{
+html,
+body{
     width: 100%;
     height: 100%;
     margin: 0;
@@ -6,18 +7,11 @@ html, body, .container{
 }
 
 h1 {
-    font-family: 'Inconsolata', monospace;
+    font-family: "Inconsolata", monospace;
     margin-bottom: 0;
 }
 
-
-#map {
-    height: 100%;
-    width: 80%;
-    float: right;
-}
-
-.side-panel {
+aside {
     width: 20%;
     height: 100%;
     text-align: center;
@@ -26,14 +20,20 @@ h1 {
     overflow: auto;
 }
 
+#map {
+    height: 100%;
+    width: 80%;
+    float: right;
+}
+
 ul {
     margin: 0px;
     padding: 10px;
     list-style-type: none;
-    font-family: 'Frank Ruhl Libre', sans-serif;
+    font-family: "Frank Ruhl Libre", sans-serif;
 }
 
-li {
+.placeName {
     display: block;
     color: #000;
     margin: 0.5em 0;
@@ -41,7 +41,7 @@ li {
 }
 
 /* Change the link color on hover */
-li:hover {
+.placeName:hover {
     background-color: #555;
     color: white;
 }

@@ -46,12 +46,18 @@ var favPlaces = [
         "location" : "200 2nd Ave N, Seattle, WA 98109",
         "lat" : "47.619398",
         "lng" : "-122.351441"
+        },
+        {
+        "name" : "Experience Music Project Museum",
+        "location" : "325 5th Ave N, Seattle, WA 98109",
+        "lat" : "47.621707",
+        "lng" : "-122.348518"
         }
 ]
 
 // Google Maps API error
 function googleMapsError() {
-    alert("Failed to load data from Google. Try again later");
+    alert('Failed to load data from Google. Try again later');
 }
 
 var map;
@@ -63,16 +69,16 @@ function initMap() {
         center: {lat: 47.606209, lng: -122.332071},
         zoom: 13
     });
-
+    infoWindow = new google.maps.InfoWindow({maxWidth: 200});
     ko.applyBindings(new ViewModel());
 }
 
 // Place constructor
 var Place = function(data) {
-    this.name = ko.observable(data.name);
-    this.location = ko.observable(data.location);
-    this.lat = ko.observable(data.lat);
-    this.lng = ko.observable(data.lng);
+    this.name = data.name;
+    this.location = data.location;
+    this.lat = data.lat;
+    this.lng = data.lng;
     this.marker;
 }
 
@@ -88,9 +94,11 @@ var markerAnimation = function(marker) {
 
 // Make infoWindow with Wikipedia informations
 var attachInfo = function(marker, name, location) {
-    infoWindow = new google.maps.InfoWindow({maxWidth: 200});
     marker.addListener('click', function() {
         marker.setIcon('http://maps.google.com/mapfiles/ms/icons/blue-dot.png');
+        setTimeout(function () {
+            marker.setIcon('http://maps.google.com/mapfiles/ms/icons/red-dot.png');
+        }, 1000);
         var wikiUrl = 'http://en.wikipedia.org/w/api.php?action=opensearch&search=' + name + '&format=json&callback=wikiCallback';
         $.ajax({
             url: wikiUrl,
@@ -98,13 +106,19 @@ var attachInfo = function(marker, name, location) {
         })
         .done(function(response) {
             var url = response[3];
-            var article = response[2][0];
-            infoWindow.setContent("<a href='"+url+"'>"+name + "</a><br><b>" + location + "</b><br> > " +article + " (Wikipedia)");
+            if (response[1].length == 0) {
+                infoWindow.setContent(name+'<br><b>'+location + '</b><br> > Data is not available. (Wikipedia) ');
+            }
+            else {
+                var article = response[2][0];
+                infoWindow.setContent('<a href="'+url+'">'+name + '</a><br><b>' + location + '</b><br> > ' +article + ' (Wikipedia)');
+            }
         })
         // Wikipedia API error
         .fail(function() {
-            infoWindow.setContent(name+"<br><b>"+location + "</b><br> > Failed to load data from Wikipedia. Please try refreshing later. ");
+            infoWindow.setContent(name+'<br><b>'+location + '</b><br> > Failed to load data from Wikipedia. Please try refreshing later. ');
         });
+
         infoWindow.open(marker.get('map'), marker);
     });
 }
@@ -124,29 +138,29 @@ var ViewModel = function() {
             icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
             map: map,
             animation: google.maps.Animation.DROP,
-            position: new google.maps.LatLng(placeItem.lat(), placeItem.lng())
+            position: new google.maps.LatLng(placeItem.lat, placeItem.lng)
         });
         placeItem.marker = marker;
+        this.attachInfo(marker, placeItem.name, placeItem.location);
         this.markerAnimation(marker);
-        this.attachInfo(marker, placeItem.name(), placeItem.location());
     });
 
     // Make marker appropriate response when list is clicked
     this.clickMarker = function(place) {
-        google.maps.event.trigger(place.marker, "click");
+        google.maps.event.trigger(place.marker, 'click');
     };
     this.mouseOverMarker = function(place) {
-        google.maps.event.trigger(place.marker, "mouseover");
+        google.maps.event.trigger(place.marker, 'mouseover');
     };
     this.mouseOutMarker = function(place) {
-        google.maps.event.trigger(place.marker, "mouseout");
+        google.maps.event.trigger(place.marker, 'mouseout');
     };
 
     // Filter markers based on filter (user input)
-    this.filter = ko.observable("");
+    this.filter = ko.observable('');
     this.filtered = ko.computed(function() {
         return ko.utils.arrayFilter(self.placeList(), function(place) {
-            if (place.name().toLowerCase().indexOf(self.filter().toLowerCase()) >= 0) {
+            if (place.name.toLowerCase().indexOf(self.filter().toLowerCase()) >= 0) {
                 place.marker.setVisible(true);
                 return true;
             } else {
