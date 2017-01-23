@@ -158,7 +158,7 @@ var ViewModel = function() {
     };
 
     // A toggle menu
-    this.isVisible = ko.observable(false);
+    this.isVisible = ko.observable(true);
     this.clickMe = function(){
         this.isVisible(!this.isVisible());
     };
